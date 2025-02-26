@@ -7,15 +7,16 @@
 
 import UIKit
 
-class TableView: UIViewController {
+class TableView: UIView {
     
-    private let todoViewModel = TodoViewModel()
+    private var todoViewModel: TodoViewModel
     private let tableView = UITableView()
     
     var onAddButtonTapped: ((String) -> Void)?
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    
+    init(frame: CGRect, viewModel: TodoViewModel) {
+        self.todoViewModel = viewModel
+        super.init(frame: frame)
         setupTableView()
         
         todoViewModel.onTodosUpdated = { [weak self] in
@@ -23,8 +24,12 @@ class TableView: UIViewController {
         }
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private func setupTableView() {
-        view.addSubview(tableView)
+        addSubview(tableView)
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -33,19 +38,11 @@ class TableView: UIViewController {
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            tableView.topAnchor.constraint(equalTo: topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: trailingAnchor)
         ])
-    }
-    
-    func addNewTodo(title: String){
-        let todos = todoViewModel.getTodos()
-        let maxId = todos.max(by: { $0.id < $1.id })?.id ?? 0
-        let date = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
-        let todo = Todo(id: maxId + 1, title: title, date: date, isDone: false)
-        todoViewModel.addTodo(todo)
     }
 }
 

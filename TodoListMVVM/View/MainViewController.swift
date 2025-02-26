@@ -9,14 +9,15 @@ import UIKit
 
 class MainViewController: UIViewController {
         
-    let tableView = TableView()
+    private let todoViewModel = TodoViewModel()
+    private var tableView: TableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addChild(tableView)
-        view.addSubview(tableView.view)
-        tableView.didMove(toParent: self)
+        view.backgroundColor = .white
+        
+        setupTableView()
         
         title = "TodoList"
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -25,8 +26,25 @@ class MainViewController: UIViewController {
         navigationItem.rightBarButtonItem = addButton
         
         tableView.onAddButtonTapped = { [weak self] title in
-            self?.tableView.addNewTodo(title: title)
+            let todos = self?.todoViewModel.getTodos()
+            let maxId = todos?.max(by: { $0.id < $1.id })?.id ?? 0
+            let date = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
+            let todo = Todo(id: maxId + 1, title: title, date: date, isDone: false)
+            self?.todoViewModel.addTodo(todo)
         }
+    }
+    
+    func setupTableView(){
+        tableView = TableView(frame: view.bounds, viewModel: todoViewModel)
+        view.addSubview(tableView)
+        
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
     }
     
     @objc func addItem() {
