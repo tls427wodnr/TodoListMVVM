@@ -14,24 +14,19 @@ class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         view.backgroundColor = .white
         
         setupTableView()
-        
+        setupNavigatioinBar()
+    }
+    
+    func setupNavigatioinBar(){
         title = "TodoList"
         navigationController?.navigationBar.prefersLargeTitles = true
         
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addItem))
         navigationItem.rightBarButtonItem = addButton
-        
-        tableView.onAddButtonTapped = { [weak self] title in
-            let todos = self?.todoViewModel.getTodos()
-            let maxId = todos?.max(by: { $0.id < $1.id })?.id ?? 0
-            let date = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
-            let todo = Todo(id: maxId + 1, title: title, date: date, isDone: false)
-            self?.todoViewModel.addTodo(todo)
-        }
     }
     
     func setupTableView(){
@@ -45,6 +40,14 @@ class MainViewController: UIViewController {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
+        
+        tableView.onAddButtonTapped = { [weak self] title in
+            let todos = self?.todoViewModel.getTodos()
+            let maxId = todos?.max(by: { $0.id < $1.id })?.id ?? 0
+            let date = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
+            let todo = Todo(id: maxId + 1, title: title, date: date, isDone: false)
+            self?.todoViewModel.addTodo(todo)
+        }
     }
     
     @objc func addItem() {
