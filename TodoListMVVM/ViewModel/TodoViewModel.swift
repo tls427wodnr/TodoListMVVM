@@ -24,7 +24,10 @@ class TodoViewModel {
         return todos.first(where: { $0.id == id })
     }
     
-    func addTodo(_ todo: Todo) {
+    func addTodo(title: String) {
+        let maxId = todos.max(by: { $0.id < $1.id })?.id ?? 0
+        let date = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
+        let todo = Todo(id: maxId + 1, title: title, date: date, isDone: false)
         todos.append(todo)
         onTodosUpdated?()
     }

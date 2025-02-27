@@ -18,10 +18,10 @@ class MainViewController: UIViewController {
         view.backgroundColor = .white
         
         setupTableView()
-        setupNavigatioinBar()
+        setupNavigationBar()
     }
     
-    func setupNavigatioinBar(){
+    func setupNavigationBar(){
         title = "TodoList"
         navigationController?.navigationBar.prefersLargeTitles = true
         
@@ -40,21 +40,13 @@ class MainViewController: UIViewController {
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
-        
-        tableView.onAddButtonTapped = { [weak self] title in
-            let todos = self?.todoViewModel.getTodos()
-            let maxId = todos?.max(by: { $0.id < $1.id })?.id ?? 0
-            let date = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
-            let todo = Todo(id: maxId + 1, title: title, date: date, isDone: false)
-            self?.todoViewModel.addTodo(todo)
-        }
     }
     
     @objc func addItem() {
         let alert = UIAlertController(title: "Add Todo", message: nil, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ok", style: .default) { [weak self] _ in
             if let text = alert.textFields?.first?.text, !text.isEmpty {
-                self?.tableView.onAddButtonTapped?(text)
+                self?.todoViewModel.addTodo(title: text)
             }
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
