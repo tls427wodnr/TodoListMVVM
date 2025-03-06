@@ -29,20 +29,17 @@ class TodoViewModel {
         let date = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
         let todo = Todo(id: maxId + 1, title: title, date: date, isDone: false)
         todos.append(todo)
-        onTodosUpdated?()
     }
     
     func removeTodo(withId id: Int) {
         if let index = todos.firstIndex(where: { $0.id == id }) {
             todos.remove(at: index)
-            onTodosUpdated?()
         }
     }
     
     func updateTodo(_ todo: Todo) {
         if let index = todos.firstIndex(where: { $0.id == todo.id }) {
             todos[index] = todo
-            onTodosUpdated?()
         }
     }
 }

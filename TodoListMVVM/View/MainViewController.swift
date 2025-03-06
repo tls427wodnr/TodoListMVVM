@@ -8,13 +8,13 @@
 import UIKit
 
 class MainViewController: UIViewController {
-        
+    
     private let todoViewModel = TodoViewModel()
     private var tableView: TableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         view.backgroundColor = .white
         
         setupTableView()
